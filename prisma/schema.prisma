@@ -1,0 +1,109 @@
+// Esquema de datos — Mapa de Zonas Afectadas Venezuela
+// Postgres (Neon) para producción. Para desarrollo local también puedes usar Postgres
+// o cambiar provider a "sqlite" + url "file:./dev.db".
+// Los estados (damageLevel, etc.) se modelan como String con valores controlados a
+// nivel de aplicación (ver lib/validation.ts), para mantener el esquema portable.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL") // conexión "pooled" (runtime / serverless)
+  directUrl = env("DIRECT_URL")   // conexión directa (migraciones / seed)
+}
+
+// ---------------------------------------------------------------------------
+// ZONA — estado/municipio/ciudad. Es la "foto" agregada: nivel de daño + estado de
+// servicios + último reporte. Refugios y reportes individuales cuelgan de aquí.
+// ---------------------------------------------------------------------------
+model Zone {
+  id       Int     @id @default(autoincrement())
+  name     String
+  slug     String  @unique // identificador para URLs y búsqueda, ej. "la-guaira"
+  type     String  @default("estado") // estado | municipio | ciudad
+  isoCode  String? // ISO 3166-2, ej. "VE-U" — para casar con el GeoJSON del mapa
+
+  parentId Int?
+  parent   Zone?   @relation("ZoneChildren", fields: [parentId], references: [id])
+  children Zone[]  @relation("ZoneChildren")
+
+  damageLevel String @default("sin_datos") // alto | medio | bajo | sin_datos
+
+  powerStatus  String @default("sin_datos") // luz
+  waterStatus  String @default("sin_datos") // agua
+  signalStatus String @default("sin_datos") // señal
+  roadsStatus  String @default("sin_datos") // vías
+
+  summary    String?
+  latitude   Float?
+  longitude  Float?
+  population Int?
+
+  lastReportAt     DateTime?
+  lastReportSource String?
+
+  reports  Report[]
+  shelters Shelter[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ---------------------------------------------------------------------------
+// REPORTE — entrada fechada (alimenta el feed). Los reportes ciudadanos entran con
+// status="pending" (cola de moderación) y NO se publican automáticamente.
+// ---------------------------------------------------------------------------
+model Report {
+  id     Int  @id @default(autoincrement())
+  zoneId Int
+  zone   Zone @relation(fields: [zoneId], references: [id])
+
+  title       String
+  body        String
+  damageLevel String?
+
+  sourceName String?
+  sourceUrl  String?
+
+  origin String @default("citizen") // seed | official | citizen
+  status String @default("pending")  // pending | published | rejected
+
+  reporterName    String?
+  reporterContact String?
+
+  reportedAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([zoneId])
+  @@index([status])
+}
+
+// ---------------------------------------------------------------------------
+// REFUGIO — punto físico de resguardo dentro de una zona.
+// ---------------------------------------------------------------------------
+model Shelter {
+  id     Int  @id @default(autoincrement())
+  zoneId Int
+  zone   Zone @relation(fields: [zoneId], references: [id])
+
+  name            String
+  address         String?
+  latitude        Float?
+  longitude       Float?
+  capacity        Int?
+  occupancy       Int?
+  contactPhone    String?
+  servicesOffered String?
+  status          String  @default("sin_datos") // abierto | lleno | cerrado | sin_datos
+
+  sourceName String?
+  sourceUrl  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([zoneId])
+}
