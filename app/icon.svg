@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Bandera de Venezuela: franjas amarilla, azul, roja + arco de 8 estrellas -->
+  <rect width="32" height="32" rx="4" fill="#cf0a2c"/>
+  <rect width="32" height="21.33" rx="4" fill="#00247d"/>
+  <rect width="32" height="10.67" rx="4" fill="#ffcc00"/>
+  <g fill="#ffffff">
+    <circle cx="4.5" cy="16.5" r="1.05"/>
+    <circle cx="7.79" cy="15.94" r="1.05"/>
+    <circle cx="11.07" cy="15.48" r="1.05"/>
+    <circle cx="14.36" cy="15.23" r="1.05"/>
+    <circle cx="17.64" cy="15.23" r="1.05"/>
+    <circle cx="20.93" cy="15.48" r="1.05"/>
+    <circle cx="24.21" cy="15.94" r="1.05"/>
+    <circle cx="27.5" cy="16.5" r="1.05"/>
+  </g>
+</svg>

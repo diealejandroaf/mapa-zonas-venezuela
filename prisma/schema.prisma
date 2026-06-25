@@ -107,3 +107,19 @@ model Shelter {
 
   @@index([zoneId])
 }
+
+// ---------------------------------------------------------------------------
+// SITE INFO — fila única (id=1) con el balance nacional: fallecidos, heridos,
+// desaparecidos, fecha del dato y fuente. Editable desde el panel de admin.
+// ---------------------------------------------------------------------------
+model SiteInfo {
+  id         Int       @id @default(1)
+  deaths     Int?
+  injured    Int?
+  missing    Int?
+  asOf       DateTime?
+  sourceName String?
+  sourceUrl  String?
+  note       String?
+  updatedAt  DateTime  @updatedAt
+}

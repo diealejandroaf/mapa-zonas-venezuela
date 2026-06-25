@@ -63,3 +63,14 @@ export const shelterCreateSchema = z.object({
 });
 
 export const shelterUpdateSchema = shelterCreateSchema.partial().omit({ zoneId: true });
+
+// --- Admin: balance nacional (fallecidos / heridos / desaparecidos) ---
+export const siteInfoSchema = z.object({
+  deaths: z.number().int().nonnegative().nullable().optional(),
+  injured: z.number().int().nonnegative().nullable().optional(),
+  missing: z.number().int().nonnegative().nullable().optional(),
+  asOf: z.string().datetime().nullable().optional(),
+  sourceName: z.string().trim().max(200).optional(),
+  sourceUrl: z.string().trim().url().max(500).optional().or(z.literal('')),
+  note: z.string().trim().max(500).optional(),
+});

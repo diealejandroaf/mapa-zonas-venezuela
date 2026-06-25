@@ -59,3 +59,17 @@ export interface ZoneDetail extends Zone {
   shelters: Shelter[];
   reports: Report[];
 }
+
+// Balance nacional (fila única).
+export interface SiteInfo {
+  deaths?: number | null;
+  injured?: number | null;
+  missing?: number | null;
+  asOf?: string | null;
+  sourceName?: string | null;
+  sourceUrl?: string | null;
+  note?: string | null;
+}
+
+// App externa para buscar/registrar personas desaparecidas.
+export const DESAPARECIDOS_URL = 'https://venezuela-te-busca-app.hellogafaro.workers.dev/';

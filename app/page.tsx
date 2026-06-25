@@ -8,6 +8,7 @@ import ZoneSearch from '@/components/ZoneSearch';
 import ZoneDetail from '@/components/ZoneDetail';
 import ReportsFeed from '@/components/ReportsFeed';
 import Legend from '@/components/Legend';
+import CasualtyBanner from '@/components/CasualtyBanner';
 
 // Leaflet sólo corre en el cliente.
 const Map = dynamic(() => import('@/components/Map'), {
@@ -55,6 +56,8 @@ export default function HomePage() {
           refugios cercanos.
         </p>
       </div>
+
+      <CasualtyBanner />
 
       {error && (
         <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</div>

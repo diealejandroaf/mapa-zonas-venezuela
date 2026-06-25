@@ -6,8 +6,9 @@ import { getToken, setToken, clearToken, adminFetch } from '@/lib/admin-client';
 import ZonesEditor from '@/components/admin/ZonesEditor';
 import ReportsManager from '@/components/admin/ReportsManager';
 import SheltersManager from '@/components/admin/SheltersManager';
+import CifrasEditor from '@/components/admin/CifrasEditor';
 
-type Tab = 'zonas' | 'reportes' | 'refugios';
+type Tab = 'zonas' | 'reportes' | 'refugios' | 'cifras';
 
 export default function AdminPage() {
   const [authed, setAuthed] = useState(false);
@@ -78,6 +79,7 @@ export default function AdminPage() {
     { id: 'zonas', label: 'Zonas' },
     { id: 'reportes', label: 'Reportes' },
     { id: 'refugios', label: 'Refugios' },
+    { id: 'cifras', label: 'Cifras' },
   ];
 
   return (
@@ -119,6 +121,7 @@ export default function AdminPage() {
       {tab === 'zonas' && <ZonesEditor />}
       {tab === 'reportes' && <ReportsManager />}
       {tab === 'refugios' && <SheltersManager />}
+      {tab === 'cifras' && <CifrasEditor />}
     </main>
   );
 }
