@@ -5,6 +5,22 @@ import { moderationSchema } from '@/lib/validation';
 
 export const dynamic = 'force-dynamic';
 
+// DELETE /api/admin/reports/:id — elimina un reporte (requiere token).
+export async function DELETE(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
+  const unauthorized = requireAdmin(req);
+  if (unauthorized) return unauthorized;
+  const id = Number(params.id);
+  const existing = await prisma.report.findUnique({ where: { id } });
+  if (!existing) {
+    return NextResponse.json({ error: 'Reporte no encontrado' }, { status: 404 });
+  }
+  await prisma.report.delete({ where: { id } });
+  return NextResponse.json({ ok: true });
+}
+
 // PATCH /api/admin/reports/:id  { status: "published" | "rejected" }  (requiere token)
 export async function PATCH(
   req: Request,

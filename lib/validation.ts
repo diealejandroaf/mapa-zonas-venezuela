@@ -23,3 +23,43 @@ export const citizenReportSchema = z.object({
 export const moderationSchema = z.object({
   status: z.enum(['published', 'rejected']),
 });
+
+// --- Admin: edición de zona (parcial; solo campos enviados) ---
+export const zoneUpdateSchema = z.object({
+  damageLevel: z.enum(DAMAGE_LEVELS).optional(),
+  powerStatus: z.enum(SERVICE_STATUSES).optional(),
+  waterStatus: z.enum(SERVICE_STATUSES).optional(),
+  signalStatus: z.enum(SERVICE_STATUSES).optional(),
+  roadsStatus: z.enum(SERVICE_STATUSES).optional(),
+  summary: z.string().trim().max(1000).optional(),
+  lastReportSource: z.string().trim().max(200).optional(),
+});
+
+// --- Admin: crear reporte oficial (se publica directo) ---
+export const adminReportSchema = z.object({
+  zoneId: z.number().int().positive(),
+  title: z.string().trim().min(4).max(200),
+  body: z.string().trim().min(5).max(2000),
+  damageLevel: z.enum(DAMAGE_LEVELS).optional(),
+  sourceName: z.string().trim().max(200).optional(),
+  sourceUrl: z.string().trim().url().max(500).optional().or(z.literal('')),
+  reportedAt: z.string().datetime().optional(),
+});
+
+// --- Admin: crear/editar refugio ---
+export const shelterCreateSchema = z.object({
+  zoneId: z.number().int().positive(),
+  name: z.string().trim().min(2).max(200),
+  address: z.string().trim().max(300).optional(),
+  status: z.enum(SHELTER_STATUSES).default('sin_datos'),
+  capacity: z.number().int().nonnegative().optional(),
+  occupancy: z.number().int().nonnegative().optional(),
+  contactPhone: z.string().trim().max(80).optional(),
+  servicesOffered: z.string().trim().max(300).optional(),
+  latitude: z.number().optional(),
+  longitude: z.number().optional(),
+  sourceName: z.string().trim().max(200).optional(),
+  sourceUrl: z.string().trim().url().max(500).optional().or(z.literal('')),
+});
+
+export const shelterUpdateSchema = shelterCreateSchema.partial().omit({ zoneId: true });
