@@ -19,15 +19,16 @@ export async function PATCH(req: Request) {
     );
   }
   const d = parsed.data;
-  const data = {
-    deaths: d.deaths ?? null,
-    injured: d.injured ?? null,
-    missing: d.missing ?? null,
-    asOf: d.asOf ? new Date(d.asOf) : null,
-    sourceName: d.sourceName || null,
-    sourceUrl: d.sourceUrl || null,
-    note: d.note || null,
-  };
+  // Merge: solo se actualizan los campos enviados (undefined = no tocar),
+  // para no borrar cifras si una actualización automática omite algún valor.
+  const data: Record<string, unknown> = {};
+  if (d.deaths !== undefined) data.deaths = d.deaths;
+  if (d.injured !== undefined) data.injured = d.injured;
+  if (d.missing !== undefined) data.missing = d.missing;
+  if (d.asOf !== undefined) data.asOf = d.asOf ? new Date(d.asOf) : null;
+  if (d.sourceName !== undefined) data.sourceName = d.sourceName || null;
+  if (d.sourceUrl !== undefined) data.sourceUrl = d.sourceUrl || null;
+  if (d.note !== undefined) data.note = d.note || null;
 
   const info = await prisma.siteInfo.upsert({
     where: { id: 1 },
