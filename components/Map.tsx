@@ -22,7 +22,7 @@ const norm = (s: string) =>
     .replace(/vargas|la guaira/g, 'la guaira')
     .trim();
 
-export default function Map({ zones, onSelect }: Props) {
+export default function MapView({ zones, onSelect }: Props) {
   const [geo, setGeo] = useState<GeoJsonObject | null>(null);
 
   // GeoJSON de estados es opcional: si existe en /public se dibuja el choropleth.

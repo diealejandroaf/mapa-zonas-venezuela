@@ -1,24 +1,34 @@
 'use client';
 
-// Muestra el error real (temporal, para depurar el crash en producción).
-export default function GlobalError({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
+export default function GlobalError({ reset }: { error: Error; reset: () => void }) {
   return (
     <html lang="es">
-      <body style={{ fontFamily: 'monospace', padding: 20, background: '#fff', color: '#111' }}>
-        <h2>⚠️ Error capturado (global)</h2>
-        <pre style={{ whiteSpace: 'pre-wrap', color: '#b00' }}>{String(error?.message)}</pre>
-        <pre>name: {String(error?.name)}</pre>
-        <pre>digest: {String(error?.digest)}</pre>
-        <pre style={{ whiteSpace: 'pre-wrap', fontSize: 11, color: '#666' }}>
-          {String(error?.stack)}
-        </pre>
-        <button onClick={() => reset()}>Reintentar</button>
+      <body
+        style={{
+          fontFamily: 'system-ui, sans-serif',
+          padding: 40,
+          textAlign: 'center',
+          color: '#111',
+        }}
+      >
+        <h2>Algo salió mal</h2>
+        <p style={{ color: '#555' }}>
+          Por favor recarga la página. Si el problema continúa, vuelve más tarde.
+        </p>
+        <button
+          onClick={() => reset()}
+          style={{
+            marginTop: 16,
+            padding: '8px 16px',
+            background: '#2563eb',
+            color: '#fff',
+            border: 'none',
+            borderRadius: 8,
+            cursor: 'pointer',
+          }}
+        >
+          Reintentar
+        </button>
       </body>
     </html>
   );
